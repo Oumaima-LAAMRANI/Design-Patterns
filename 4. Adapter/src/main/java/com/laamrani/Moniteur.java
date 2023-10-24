@@ -1,0 +1,11 @@
+package com.laamrani;
+
+public class Moniteur implements Standard{
+
+    @Override
+    public void print(String str) {
+        System.out.println("***************");
+        System.out.println(str);
+        System.out.println("***************");
+    }
+}

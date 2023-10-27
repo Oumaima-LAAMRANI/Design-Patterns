@@ -6,7 +6,6 @@ public class Context {
     public void setStrategy(IStrategy strategy) {
         this.strategy = strategy;
     }
-
     public void effectuerOperation(){
         System.out.println("**************");
         strategy.opertaionStrategy();

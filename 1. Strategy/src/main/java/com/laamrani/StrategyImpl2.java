@@ -1,5 +1,4 @@
 package com.laamrani;
-
 public class StrategyImpl2 implements IStrategy{
     @Override
     public void opertaionStrategy() {

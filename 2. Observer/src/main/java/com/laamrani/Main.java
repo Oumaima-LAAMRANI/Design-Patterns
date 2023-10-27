@@ -1,5 +1,4 @@
 package com.laamrani;
-
 import com.laamrani.push.ObservableImpl;
 import com.laamrani.push.Observer;
 import com.laamrani.push.ObserverImpl1;

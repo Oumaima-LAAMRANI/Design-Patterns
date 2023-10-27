@@ -1,18 +1,18 @@
 package com.laamrani;
 
 public class UniteCentrale {
-    private Standard standard;
-    public void afficher(String str){
+    private Vga vga;
+    public void afficher(String message){
         System.out.println("****************");
-        System.out.println(str);
+        vga.print(message);
         System.out.println("****************");
     }
 
-    public void setStandard(Standard standard) {
-        this.standard = standard;
+    public void setVga(Vga vga) {
+        this.vga = vga;
     }
 
-    public Standard getStandard() {
-        return standard;
+    public Vga getVga() {
+        return vga;
     }
 }

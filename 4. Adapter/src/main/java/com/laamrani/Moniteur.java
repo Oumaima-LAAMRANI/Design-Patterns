@@ -1,11 +1,11 @@
 package com.laamrani;
 
-public class Moniteur implements Standard{
+public class Moniteur implements Vga {
 
     @Override
-    public void print(String str) {
-        System.out.println("***************");
-        System.out.println(str);
-        System.out.println("***************");
+    public void print(String message) {
+        System.out.println("********com.laamrani.Moniteur*******");
+        System.out.println(message);
+        System.out.println("********com.laamrani.Moniteur*******");
     }
 }

@@ -1,11 +1,12 @@
 package com.laamrani.model;
 
-public class BankAccount {
+public class BankAccount implements Cloneable{
     private Long accountId;
     private double balance;
     private String currency;
     private AccountType type;
     private AccountStatus status;
+    private Customer customer;
 
     public BankAccount() {
     }
@@ -57,6 +58,14 @@ public class BankAccount {
     public void setStatus(AccountStatus status) {
         this.status = status;
     }
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
     @Override
     public String toString() {
         return "BankAccount{" +
@@ -65,6 +74,7 @@ public class BankAccount {
                 ", currency='" + currency + '\'' +
                 ", type=" + type +
                 ", status=" + status +
+                ", customer=" + customer +
                 '}';
     }
 
@@ -93,5 +103,12 @@ public class BankAccount {
         public BankAccount build(){
             return this.bankAccount;
         }
-        }
+    }
+
+    @Override
+    public BankAccount clone() throws CloneNotSupportedException {
+        BankAccount bankAccount = (BankAccount) super.clone();
+        bankAccount.setCustomer(this.getCustomer().clone());
+        return bankAccount;
+    }
 }

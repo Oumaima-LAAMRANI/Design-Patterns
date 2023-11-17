@@ -13,13 +13,37 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AccountRepositoryImpl implements AccountRepository {
+    /*    1ere solution
+    private static final AccountRepositoryImpl accountRepository;
+    static {
+        System.out.println("Singleton instantiation");
+        accountRepository=new AccountRepositoryImpl();
+    }
+        2eme solution
+      private static AccountRepositoryImpl accountRepository;
+    */
+    private static final AccountRepositoryImpl accountRepository;
+    static {
+        System.out.println("Singleton instantiation");
+        accountRepository=new AccountRepositoryImpl();
+    }
     private Map<Long, BankAccount> bankAccountMap=new HashMap<>();
     private long accountsCount=0;
+
+    private AccountRepositoryImpl() {}
+
     @Override
     public BankAccount save(BankAccount bankAccount) {
-        Long accountId=++accountsCount;
+        Long accountId;
+        synchronized (this){
+            accountId=++accountsCount; // Critical zone
+        }
         bankAccount.setAccountId(accountId);
-        bankAccountMap.put(accountId,bankAccount);
+        synchronized (this){
+            bankAccountMap.put(accountId,bankAccount); //si je le fais pas il se peut qu'une valeur soit ecrasé
+        }
+        //puisque il est difficile de detecter les zone critique,
+        // on peut rendre cette methode syncronized
         return bankAccount;
     }
 
@@ -55,11 +79,23 @@ public class AccountRepositoryImpl implements AccountRepository {
         for (int i = 0; i < 10; i++) {
             BankAccount bankAccount= BankDirector.accountBuilder()
                     .balance(100000+Math.random())
-                    .type(Math.random()>0.9? AccountType.SAVING_ACCOUNT:AccountType.SAVING_ACCOUNT)
+                    .type(Math.random()>0.9? AccountType.SAVING_ACCOUNT:AccountType.CURRENT_ACCOUNT)
                     .status(Math.random()>0.5?AccountStatus.CREATED:AccountStatus.ACTIVATED)
                     .currency(Math.random()>0.5?"MAD":"USD")
                     .build();
             save(bankAccount);
+
         }
+        System.out.println("************************************");
+        System.out.println(Thread.currentThread().getName());
+        System.out.println("Account Count = "+accountsCount);
+        System.out.println("Size = "+bankAccountMap.values().size());
+        System.out.println("************************************");
+    }
+    public synchronized static AccountRepositoryImpl getInstance(){
+        /* 2eme solution
+        if(accountRepository==null)
+            accountRepository=new AccountRepositoryImpl();*/
+        return accountRepository;
     }
 }

@@ -1,29 +1,27 @@
 package com.laamrani;
 
-import com.laamrani.model.AccountStatus;
 import com.laamrani.model.AccountType;
 import com.laamrani.model.BankAccount;
-import com.laamrani.model.BankDirector;
-import com.laamrani.repository.AccountRepository;
 import com.laamrani.repository.AccountRepositoryImpl;
 import com.laamrani.util.JsonSerializer;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         JsonSerializer<BankAccount> bankAccountJsonSerializer=new JsonSerializer<>();
-        AccountRepositoryImpl accountRepository=new AccountRepositoryImpl();
-        accountRepository.populateData();
-        List<BankAccount> bankAccounts = accountRepository.searchAccounts(
-                new Predicate<BankAccount>() {
-                    @Override
-                    public boolean test(BankAccount bankAccount) {
-                        return bankAccount.getType().equals(AccountType.CURRENT_ACCOUNT);
-                    }
-                }
-        );
+        AccountRepositoryImpl accountRepository=AccountRepositoryImpl.getInstance();
+        for (int i = 0; i < 10; i++) {
+            new Thread(()->{
+                accountRepository.populateData();
+            }).start();
+        }
+        System.out.println("Tape");
+        System.in.read();
+        List<BankAccount> bankAccounts = accountRepository.findAll();        /*List<BankAccount> bankAccounts = accountRepository
+                .searchAccounts(bankAccount ->
+                        bankAccount.getType().equals(AccountType.CURRENT_ACCOUNT)&& bankAccount.getBalance()>1000        );*/
         bankAccounts.stream()
                 .map(bankAccountJsonSerializer::toJson)
                 .forEach(System.out::println);
